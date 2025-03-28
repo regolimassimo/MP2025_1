@@ -39,6 +39,7 @@ import com.massimoregoli.mp2025.model.GameModel
 import com.massimoregoli.mp2025.model.Model
 import com.massimoregoli.mp2025.model.WordsEntity
 import com.massimoregoli.mp2025.ui.theme.ContainerColor
+import com.massimoregoli.mp2025.ui.theme.ContentColor
 
 @Composable
 fun InputName(modifier: Modifier = Modifier) {
@@ -162,7 +163,7 @@ fun ButtonBar(buttonClick: () -> Unit) {
     Button(
         modifier = Modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(200, 200, 200, 255),
+            containerColor = ContentColor,
             contentColor = Color.Black
         ),
         border = BorderStroke(1.dp, Color.Blue),
@@ -177,7 +178,7 @@ fun DrawState(state: Int) {
     Row(modifier = Modifier.padding(4.dp), horizontalArrangement = Arrangement.Center) {
         Image(modifier=Modifier.
             clip(RoundedCornerShape(4.dp))
-            .background(ContainerColor)
+            .background(ContentColor, RoundedCornerShape(4.dp))
                     .border(1.dp, Color.Blue, RoundedCornerShape(4.dp)),
             painter = painterResource(id = states[state]),
             contentDescription = "")
@@ -187,6 +188,7 @@ fun DrawState(state: Int) {
 @Composable
 fun SecretWord(secret: String, attempts: String, onWin: () -> Unit) {
     Row(modifier = Modifier
+        .background(ContentColor, RoundedCornerShape(4.dp))
         .border(1.dp, Color.Blue, RoundedCornerShape(4.dp))
         .padding(4.dp),
         horizontalArrangement = Arrangement.Center) {
@@ -217,40 +219,42 @@ fun SecretWord(secret: String, attempts: String, onWin: () -> Unit) {
 fun KeyBoard(attempts: String, lock: Boolean, onClick: (String) -> Unit) {
     val rows = listOf("qwertyuiop", "asdfghjkl", "zxcvbnm")
     val context = LocalContext.current
-    for (row in rows) {
-        Row(modifier = Modifier, horizontalArrangement = Arrangement.Center) {
-            for (c in row) {
-                Text(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .border(1.dp, Color.Blue, RoundedCornerShape(4.dp))
-                        .padding(2.dp)
-                        .background(Color(200, 200, 200, 255), RoundedCornerShape(4.dp))
-                        .clickable {
-                            if (!lock) {
-                                if (!attempts.contains(c.toString())) {
-                                    onClick(c.toString())
-                                } else {
-                                    Toast.makeText(context, "Already used", Toast.LENGTH_SHORT)
-                                        .show()
+    Column(horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(4.dp)) {
+        for (row in rows) {
+            Row(modifier = Modifier, horizontalArrangement = Arrangement.Center) {
+                for (c in row) {
+                    Text(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .border(1.dp, Color.Blue, RoundedCornerShape(4.dp))
+                            .padding(2.dp)
+                            .background(ContentColor, RoundedCornerShape(4.dp))
+                            .clickable {
+                                if (!lock) {
+                                    if (!attempts.contains(c.toString())) {
+                                        onClick(c.toString())
+                                    } else {
+                                        Toast.makeText(context, "Already used", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
                                 }
                             }
+                            .padding(2.dp),
+                        text = c.toString(),
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = dimensionResource(R.dimen.key_size).value.sp,
+                        color = if (attempts.contains(c.toString())) {
+                            Color(230, 230, 230, 255)
+                        } else {
+                            Color.Black
                         }
-                        .padding(2.dp),
-                    text = c.toString(),
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = dimensionResource(R.dimen.key_size).value.sp,
-                    color = if (attempts.contains(c.toString())) {
-                        Color(230, 230, 230, 255)
-                    } else {
-                        Color.Black
-                    }
 
-                )
+                    )
+                }
             }
         }
     }
-
 }
 
 @Preview
