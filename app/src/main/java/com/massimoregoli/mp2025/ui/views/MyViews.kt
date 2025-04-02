@@ -19,7 +19,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -34,10 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.massimoregoli.mp2025.R
+import com.massimoregoli.mp2025.model.GUIEntity
 import com.massimoregoli.mp2025.model.GameModel
 
 import com.massimoregoli.mp2025.model.Model
-import com.massimoregoli.mp2025.model.WordsEntity
 import com.massimoregoli.mp2025.ui.theme.ContainerColor
 import com.massimoregoli.mp2025.ui.theme.ContentColor
 
@@ -100,45 +99,19 @@ val states = listOf(
 )
 
 @Composable
-fun HangmanView(modifier: Modifier = Modifier, wordsEntity: WordsEntity, isPortrait: Boolean) {
-    val state = rememberSaveable { mutableIntStateOf(0) }
-    val secret = rememberSaveable { mutableStateOf(wordsEntity.getRandomWord()) }
-    val attempts = rememberSaveable { mutableStateOf("") }
-    val lock = rememberSaveable { mutableStateOf(false) }
-
+fun HangmanView(modifier: Modifier = Modifier, isPortrait: Boolean) {
     val context = LocalContext.current
-    val youWin = {
-        if (!lock.value)
-            Toast.makeText(context, "Win", Toast.LENGTH_SHORT).show()
-        lock.value = true
-    }
-    val buttonClick = {
-        state.intValue = 0
-        attempts.value = ""
-        secret.value = wordsEntity.getRandomWord()
-        lock.value = false
-    }
+    val entity = rememberSaveable { GUIEntity(context) }
 
-    val keyClick= { it: String ->
-        if (it !in secret.value) {
-            state.intValue = (state.intValue + 1)
-            if (state.intValue == 5) {
-                Toast.makeText(context, "Game Over", Toast.LENGTH_SHORT).show()
-                attempts.value = secret.value
-                lock.value = true
-            }
-        }
-        attempts.value += it
-    }
     if (isPortrait) {
         Column(
             modifier = modifier.fillMaxSize().background(ContainerColor),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            DrawState(state.intValue)
-            SecretWord(secret.value, attempts.value, youWin)
-            KeyBoard(attempts.value, lock.value, keyClick)
-            ButtonBar { buttonClick() }
+            DrawState(entity.state)
+            SecretWord(entity.secret, entity.attempts, entity.youWin)
+            KeyBoard(entity.attempts, entity.lock, entity.keyClick)
+            ButtonBar { entity.buttonClick() }
         }
     } else {
         Row(
@@ -147,12 +120,12 @@ fun HangmanView(modifier: Modifier = Modifier, wordsEntity: WordsEntity, isPortr
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                DrawState(state.intValue)
-                SecretWord(secret.value, attempts.value, youWin)
+                DrawState(entity.state)
+                SecretWord(entity.secret, entity.attempts, entity.youWin)
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                KeyBoard(attempts.value, lock.value, keyClick)
-                ButtonBar { buttonClick() }
+                KeyBoard(entity.attempts, entity.lock, entity.keyClick)
+                ButtonBar { entity.buttonClick() }
             }
         }
     }

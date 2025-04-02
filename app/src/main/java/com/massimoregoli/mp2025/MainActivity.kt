@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.massimoregoli.mp2025.model.WordsEntity
 import com.massimoregoli.mp2025.ui.theme.MP2025Theme
 import com.massimoregoli.mp2025.ui.views.HangmanView
 
@@ -29,7 +28,6 @@ class MainActivity : ComponentActivity() {
         // enableEdgeToEdge()
         setContent {
             MP2025Theme {
-                val wordsEntity = WordsEntity(this)
                 val insetsController = WindowCompat.getInsetsController(window, window.decorView)
                 insetsController.apply {
                     hide(WindowInsetsCompat.Type.statusBars())
@@ -44,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     topBar = { Text("Hangman",
                         fontSize = 32.sp,
                         modifier = Modifier.padding(8.dp)) },) { innerPadding ->
-                    HangmanView(modifier = Modifier.padding(innerPadding), wordsEntity, isPortrait)
+                    HangmanView(modifier = Modifier.padding(innerPadding), isPortrait)
 //                NavigationRailSample(Modifier.padding(innerPadding))
 //                    Screen0(modifier = Modifier.padding(innerPadding))
 //                    InputName(modifier = Modifier.padding(innerPadding))

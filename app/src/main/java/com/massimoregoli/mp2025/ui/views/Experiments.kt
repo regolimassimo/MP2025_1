@@ -24,11 +24,11 @@ enum class Page(val title:String, val content: String){
 
 @Composable
 fun NavigationRailSample(modifier: Modifier = Modifier) {
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(0) }
     val pages = Page.entries.toTypedArray()
     val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.Settings)
     Row(modifier=modifier) {
-        NavigationRail(header = { Text("Header", color= Color.Red) },) {
+        NavigationRail(header = { Text("Header", color = Color.Red) }) {
             pages.forEachIndexed { index, item ->
                 when(item){
                     Page.HOME -> {

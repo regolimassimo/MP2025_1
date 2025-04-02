@@ -10,25 +10,23 @@ class Model: Parcelable {
     @IgnoredOnParcel
     private var _textValue = mutableStateOf("")
     @IgnoredOnParcel
-    private var _reversedTextValue = mutableStateOf("")
+//    private var _reversedTextValue = mutableStateOf("")
 
-    var textValue = ""
-        get() {
-            return _textValue.value.replaceFirstChar { it.uppercase() }
-        }
+    var textValue: String
         set(value) {
             _textValue.value = value
-            field = value
         }
-    var reversedTextValue = ""
         get() {
-            return _reversedTextValue.value
-        }
-        set(value) {
-            _reversedTextValue.value = value.reversed()
-            field = value.reversed()
+            return _textValue.value.replaceFirstChar { it.uppercase()}
         }
 
+//    var reversedTextValue: String
+//        set(value) {
+//            _reversedTextValue.value = value.reversed()
+//        }
+//        get() {
+//            return _textValue.value.replaceFirstChar { it.uppercase()}
+//        }
 }
 
 @Parcelize
